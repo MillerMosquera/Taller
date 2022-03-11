@@ -8,7 +8,19 @@ a, .btn-link {
     color: #0366d6;
 }
 
-.btn-primary {
+.tableAdd {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    margin: 20px;
+}
+
+
+a {
+    outline: none;
+    text-decoration: none;
+}
+    .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;

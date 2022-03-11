@@ -1,0 +1,84 @@
+﻿@page "/AñadirCliente"
+@page "/AñadirCliente/{IdCliente:int}" 
+
+@using Data.Model
+@using Data.Services
+
+@inject IClienteService ClienteService
+@inject NavigationManager NavigationManager
+
+
+<h1>Adicionar Film</h1>
+
+<EditForm Model="@cliente" OnValidSubmit="@SaveCliente">
+    <table>
+        <tr>
+            <td>Código:</td>
+            <td><input type="text" @bind="cliente.IdCliente" required /></td>
+        </tr>
+        <tr>
+            <td>Nombre:</td>
+            <td><input type="text" @bind="cliente.NombreCliente" required /></td>
+        </tr>
+        <tr>
+            <td>Apellido:</td>
+            <td><input type="text" @bind="cliente.ApellidoCliente" required /></td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td><input type="text" @bind="cliente.EmailCliente" required/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Guardar" />
+                <input type="button" value="Cancelar" @onclick="@Cancel" />
+            </td>
+        </tr>
+    </table>
+</EditForm>
+
+
+
+
+@code {
+    Cliente cliente = new Cliente();
+
+    [Parameter]
+    public int Idcliente { get; set; } //Le pasa el id en @page está
+
+    //Obtiene los datos del cliente cuando se inicializa y valida
+    protected override async Task OnInitializedAsync()
+    {
+        if(Idcliente == 0)
+        {
+            await ClienteService.Get();
+        }
+        else
+        {
+            cliente = await ClienteService.GetId(Idcliente);
+        }
+    }
+
+    //Guardas los datos del cliente a ingresar
+    protected async Task SaveCliente()
+    {
+        if(Idcliente == 0) //Valida para saber si va a insertar o va a actualizar
+        {
+
+            await ClienteService.ClienteInsert(cliente);
+            NavigationManager.NavigateTo("/Mostrar");
+        }
+        else
+        {
+            await ClienteService.ClienteUpdate(cliente);
+            NavigationManager.NavigateTo("/Mostrar");
+        }
+
+    }
+    //Nos redirige a la pagina principal
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    
+}

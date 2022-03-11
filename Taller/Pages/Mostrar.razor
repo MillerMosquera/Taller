@@ -1,0 +1,65 @@
+﻿@page "/Mostrar"
+
+@using Data.Model
+@using Data.Services
+
+@inject IClienteService ClienteService
+@inject NavigationManager NavigationManager
+
+<table class="table table-hover tableAdd">
+    <thead>
+        <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Email</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+</table>
+
+
+@if (clientes == null)
+{
+    <h1>No hay usuarios</h1>
+}
+else
+{
+    @foreach (var list in clientes)
+    {
+        <table class="table tableAdd">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <th>@list.IdCliente</th>
+                    <td>@list.NombreCliente</td>
+                    <td>@list.ApellidoCliente</td>
+                    <td>@list.EmailCliente</td>
+                    <td><a href="/AñadirCliente/@list.IdCliente"><i>Editar</i></a></td> <!--Le pasa el cliente a la venta AñadirCliente-->
+                    <td><a href="/EliminarCliente/@list.IdCliente"><i>Eliminar</i></a></td><!--Le pasa el cliente a la venta EliminarCliente-->
+
+                </tr>
+            </tbody>
+        </table>
+
+    }
+}
+
+@code {
+    private IEnumerable<Cliente> clientes;
+
+    //Obtiene los datos del cliennte cuando se inicializa
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            clientes = await ClienteService.Get();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+}

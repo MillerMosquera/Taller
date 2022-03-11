@@ -1,0 +1,76 @@
+﻿@page "/EliminarCliente/{IdCliente:int}"
+
+@using Data.Model
+@using Data.Services
+
+@inject IClienteService ClienteService
+@inject NavigationManager NavigationManager
+
+
+<h1>Eliminar</h1>
+<p style="color:red;">Seguro que desea eliminar ??</p>
+
+<EditForm Model="@cliente">
+    <table>
+        <tr>
+            <td>Código:</td>
+            <td><input type="text" @bind="cliente.IdCliente" required /></td>
+        </tr>
+        <tr>
+            <td>Nombre:</td>
+            <td><input type="text" @bind="cliente.NombreCliente" required /></td>
+        </tr>
+        <tr>
+            <td>Apellido:</td>
+            <td><input type="text" @bind="cliente.ApellidoCliente" required /></td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td><input type="text" @bind="cliente.EmailCliente" required/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Eliminar" @onclick="@DeleteCliente" />
+                <input type="button" value="Cancelar" @onclick="@Cancel" />
+            </td>
+        </tr>
+    </table>
+</EditForm>
+
+
+
+
+@code {
+    Cliente cliente = new Cliente();
+
+    [Parameter]
+    public int Idcliente { get; set; } //Le pasa el id en @page está
+
+    //Obtiene los datos del cliente cuando se inicializa y valida
+    protected override async Task OnInitializedAsync()
+    {
+        if(Idcliente == 0) //Valida si no le paso el id del cliente, entonces los obtiene todo
+        {
+            await ClienteService.Get();
+        }
+        else //Si es lo contrario y tiene un id entonces se lo pasa como parametro
+        {
+            cliente = await ClienteService.GetId(Idcliente);
+        }
+    }
+
+    //Funcion para borrar el cliente
+    protected async Task DeleteCliente()
+    {
+       
+      await ClienteService.DeleteCliente(Idcliente); //Llamda la funcion del crud y le pasa el id a eliminnar
+      NavigationManager.NavigateTo("/Mostrar");
+       
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/");//Si cancela nos redirige a la pagina principal
+    }
+    
+}

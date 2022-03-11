@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Taller.Data.Model
 {
+    //Metodos get and set
     public class Cliente
     {
 
